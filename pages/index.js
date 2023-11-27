@@ -46,10 +46,10 @@ const Home = () => {
 
     return (
     <Layout>
-        <Container maxW="container.md" pt={6} px={6}>
+        <Container maxW="container.md" centerContent pt={6} px={6} height="100vh">
             {/* 输入区域 */}
-            <Box mb={4}>
-                <Heading as="h3" size="lg" mb={4}>向佛陀提问</Heading>
+            <Box mb={4} >
+                <Heading as="h3" size="xl" mb={6}>向佛陀提问</Heading>
                 <Input
                     //回车提交
                     onKeyPress={(e) => {
@@ -64,7 +64,7 @@ const Home = () => {
                     bg="white"
                     borderColor="teal.300"
                 />
-                <Button mt={4} colorScheme="teal" onClick={handleSubmit} isLoading={loading}>
+                <Button mt={4} colorScheme="teal" size="lg" onClick={handleSubmit} isLoading={loading}>
                     发起提问
                 </Button>
 
@@ -74,7 +74,7 @@ const Home = () => {
             {response && (
                 <Box mt={4}>
                     <Text fontSize="lg">佛陀的回答：</Text>
-                    <Box p={4} bg="teal.50" borderRadius="md" borderColor="teal.200" borderWidth="1px">
+                    <Box p={4} bg="white" borderRadius="md" borderColor="teal.300" borderWidth="2px">
                         {response}
                     </Box>
                 </Box>

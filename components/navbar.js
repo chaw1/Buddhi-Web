@@ -13,11 +13,15 @@ import {
   MenuList,
   MenuButton,
   IconButton,
-  useColorModeValue
+  useColorModeValue,
+  Button,
+  useDisclosure
 } from '@chakra-ui/react'
 import { HamburgerIcon } from '@chakra-ui/icons'
 import ThemeToggleButton from './theme-toggle-button'
 import { IoLogoGithub } from 'react-icons/io5'
+import LoginModal from './LoginModal'; // 假设这是您的登录模态组件
+import RegisterModal from './RegisterModal'; // 假设这是您的注册模态组件
 
 const LinkItem = ({ href, path, target, children, ...props }) => {
   const active = path === href
@@ -44,6 +48,17 @@ const MenuLink = forwardRef((props, ref) => (
 
 const Navbar = props => {
   const { path } = props
+  const {
+    isOpen: isLoginOpen,
+    onOpen: onLoginOpen,
+    onClose: onLoginClose,
+  } = useDisclosure();
+
+  const {
+    isOpen: isRegisterOpen,
+    onOpen: onRegisterOpen,
+    onClose: onRegisterClose,
+  } = useDisclosure();
 
   return (
     <Box
@@ -102,7 +117,7 @@ const Navbar = props => {
         </Stack>
 
         <Box flex={1} align="right">
-          <ThemeToggleButton />
+          <ThemeToggleButton  mr={4}/>
 
           <Box ml={2} display={{ base: 'inline-block', md: 'none' }}>
             <Menu isLazy id="navbar-menu">
@@ -138,6 +153,17 @@ const Navbar = props => {
             </Menu>
           </Box>
         </Box>
+        {/* 登录和注册按钮 */}
+        <Flex ml="auto" align="center">
+          <Button mr={2} onClick={onLoginOpen}>登录</Button>
+          <Button onClick={onRegisterOpen}>注册</Button>
+        </Flex>
+
+        {/* 登录模态窗口 */}
+        <LoginModal isOpen={isLoginOpen} onClose={onLoginClose} />
+
+        {/* 注册模态窗口 */}
+        <RegisterModal isOpen={isRegisterOpen} onClose={onRegisterClose} />
       </Container>
     </Box>
   )
