@@ -6,6 +6,7 @@ import Payhip from '../components/payhip'
 import { Analytics } from '@vercel/analytics/react'
 import { useState, useEffect } from 'react';
 import LoadingScreen from '../components/LoadingScreen'; // 加载屏幕组件
+import { AuthProvider } from '../components/context/AuthContext'; // 引入AuthContext
 
 if (typeof window !== 'undefined') {
   window.history.scrollRestoration = 'manual'
@@ -18,7 +19,9 @@ function Website({ Component, pageProps, router }) {
       const timer = setTimeout(() => setIsLoading(false), 2000);
       return () => clearTimeout(timer);
      }, []);
+
   return (
+      <AuthProvider> {/* 在这里使用AuthProvider包裹应用 */}
     <Chakra cookies={pageProps.cookies}>
         {isLoading && <LoadingScreen />} {/* 根据isLoading状态显示或隐藏加载屏幕 */}
       <Fonts />
@@ -38,6 +41,7 @@ function Website({ Component, pageProps, router }) {
         <Analytics />
       </Layout>
     </Chakra>
+      </AuthProvider>
   )
 }
 

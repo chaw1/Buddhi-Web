@@ -13,6 +13,7 @@ import {
     Input
 } from '@chakra-ui/react';
 import axios from 'axios'; // 引入axios
+import { AuthContext } from '../components/context/AuthContext';
 
 const RegisterModal = ({ isOpen, onClose }) => {
     const [email, setEmail] = useState('');
@@ -25,7 +26,7 @@ const RegisterModal = ({ isOpen, onClose }) => {
             return;
         }
         try {
-            const res = await axios.post('/api/register', { email, password });
+            const res = await axios.post('http://localhost:8080/register', { email, password });
             console.log(res.data);
             onClose(); // 关闭模态窗口
         } catch (error) {

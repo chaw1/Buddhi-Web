@@ -3,6 +3,7 @@ import Logo from './logo'
 import NextLink from 'next/link'
 import {
   Container,
+  Text,
   Box,
   Link,
   Stack,
@@ -22,6 +23,8 @@ import ThemeToggleButton from './theme-toggle-button'
 import { IoLogoGithub } from 'react-icons/io5'
 import LoginModal from './LoginModal'; // 假设这是您的登录模态组件
 import RegisterModal from './RegisterModal'; // 假设这是您的注册模态组件
+import { AuthContext } from './context/AuthContext';
+import { useContext } from 'react';
 
 const LinkItem = ({ href, path, target, children, ...props }) => {
   const active = path === href
@@ -47,7 +50,11 @@ const MenuLink = forwardRef((props, ref) => (
 ))
 
 const Navbar = props => {
-  const { path } = props
+/*  const { path } = props*/
+  const { user, logout } = useContext(AuthContext); // 使用AuthContext
+  console.log("user信息")
+  console.log(user)
+
   const {
     isOpen: isLoginOpen,
     onOpen: onLoginOpen,
@@ -92,30 +99,7 @@ const Navbar = props => {
           flexGrow={1}
           mt={{ base: 4, md: 0 }}
         >
-          {/*<LinkItem href="/works" path={path}>
-            Works
-          </LinkItem>
-          <LinkItem href="/wallpapers" path={path}>
-            Wallpapers
-          </LinkItem>
-          <LinkItem href="/posts" path={path}>
-            Posts
-          </LinkItem>
-          <LinkItem href="https://uses.craftz.dog/">Uses</LinkItem>
-          <LinkItem
-            target="_blank"
-            href="https://github.com/craftzdog/craftzdog-homepage"
-            path={path}
-            display="inline-flex"
-            alignItems="center"
-            style={{ gap: 4 }}
-            pl={2}
-          >
-            <IoLogoGithub />
-            Source
-          </LinkItem>*/}
         </Stack>
-
         <Box flex={1} align="right">
           <ThemeToggleButton  mr={4}/>
 
@@ -153,17 +137,21 @@ const Navbar = props => {
             </Menu>
           </Box>
         </Box>
-        {/* 登录和注册按钮 */}
-        <Flex ml="auto" align="center">
-          <Button mr={2} onClick={onLoginOpen}>登录</Button>
-          <Button onClick={onRegisterOpen}>注册</Button>
-        </Flex>
 
-        {/* 登录模态窗口 */}
+        {/* 根据登录状态显示不同的按钮 */}
+        {user ? (
+            <Flex ml="auto" align="center">
+              <Text mr={2}>欢迎, {user.email}</Text>
+              <Button onClick={logout}>登出</Button>
+            </Flex>
+        ) : (
+            <Flex ml="auto" align="center">
+              <Button mr={2} onClick={onLoginOpen}>登录</Button>
+              <Button onClick={onRegisterOpen}>注册</Button>
+            </Flex>
+        )}
         <LoginModal isOpen={isLoginOpen} onClose={onLoginClose} />
-
-        {/* 注册模态窗口 */}
-        <RegisterModal isOpen={isRegisterOpen} onClose={onRegisterClose} />
+          <RegisterModal isOpen={isRegisterOpen} onClose={onRegisterClose} />
       </Container>
     </Box>
   )

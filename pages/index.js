@@ -16,9 +16,10 @@ import {
 import { ChevronRightIcon, EmailIcon } from '@chakra-ui/icons'
 import { IoLogoTwitter, IoLogoInstagram, IoLogoGithub } from 'react-icons/io5'
 import Image from 'next/image'
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import axios from 'axios'; // 引入axios
 import Layout from '../components/layouts/article'
+import { AuthContext } from '../components/context/AuthContext'; // 引入AuthContext
 
 const ProfileImage = chakra(Image, {
     shouldForwardProp: prop => ['width', 'height', 'src', 'alt'].includes(prop)
@@ -27,15 +28,25 @@ const ProfileImage = chakra(Image, {
 const Home = () => {
     const [question, setQuestion] = useState('');
     const [response, setResponse] = useState('');
+    const { isLoggedIn } = useContext(AuthContext); // 获取登录状态
 
     // 用于处理问题提交的函数
     const [loading, setLoading] = useState(false);
     const handleSubmit = async () => {
+        if (!isLoggedIn) {
+            // 如果用户未登录，显示提示信息或打开登录模态框
+            alert("请先登录！");
+            return;
+        }
         setLoading(true);
         try {
             // 发送POST请求到后端
-            const res = await axios.post('http://localhost:8080/ask', { question });
-            // 设置响应
+            const token = localStorage.getItem('token');
+            const res = await axios.post('http://localhost:8080/ask', { question }, {
+                headers: {
+                    'Authorization': `${token}` // 确保正确地附加了令牌
+                }
+            });
             setResponse(res.data.response);
         } catch (error) {
             console.error('Error during API call:', error);
@@ -67,7 +78,6 @@ const Home = () => {
                 <Button mt={4} colorScheme="teal" size="lg" onClick={handleSubmit} isLoading={loading}>
                     发起提问
                 </Button>
-
             </Box>
 
             {/* 显示回复区域 */}
